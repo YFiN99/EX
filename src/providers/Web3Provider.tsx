@@ -2,62 +2,36 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
-// Ambil RPC dari environment variable (paling aman untuk production)
-const RPC_URL = import.meta.env.VITE_RPC_URL || "https://rpc-testnet.celeschain.xyz/";
-
+// 1. Definisikan CelesChain 🛰️
 const celesChain = {
   id: 22225,
-  name: "CelesChain Testnet",
-  nativeCurrency: {
-    name: "Celes",
-    symbol: "CLES",
-    decimals: 18,
-  },
+  name: "CelesChain",
+  nativeCurrency: { name: "Celes", symbol: "CLES", decimals: 18 },
   rpcUrls: {
-    default: {
-      http: [RPC_URL],
-    },
-    // Bisa ditambah websocket kalau dibutuhkan
-    // public: { http: [RPC_URL], webSocket: ["wss://rpc-testnet.celeschain.xyz"] },
+    default: { http: ["https://rpc.celes.network"] },
   },
   blockExplorers: {
-    default: {
-      name: "CelesChain Testnet Explorer",
-      url: "https://testnet-explorer.celeschain.xyz/",
-    },
+    default: { name: "CelesScan", url: "https://explorer.celes.network" },
   },
-  // Optional: tambahkan testnet flag kalau Wagmi butuh
-  testnet: true,
 };
 
-// WalletConnect Project ID (wajib diisi kalau mau support wallet mobile)
-const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID || "";
-
+// 2. Buat Konfigurasi ⚙️
 const config = createConfig(
   getDefaultConfig({
     chains: [celesChain],
-    walletConnectProjectId: projectId,
-    appName: "CEX Staking", // atau nama app kamu
-    // Penting: definisikan transport secara eksplisit
-    transports: {
-      [celesChain.id]: http(RPC_URL),
-    },
+    walletConnectProjectId: "", // Bisa diisi nanti
+    appName: "CEX Staking",
   })
 );
 
 const queryClient = new QueryClient();
 
+// 3. Provider Component 📦
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider
-          theme="auto" // atau custom theme kalau ada
-          options={{
-            // Optional: hide some wallets kalau tidak relevan
-            // walletDisplay: "show-all",
-          }}
-        >
+        <ConnectKitProvider>
           {children}
         </ConnectKitProvider>
       </QueryClientProvider>
