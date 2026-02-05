@@ -1,0 +1,29 @@
+{
+  "chainId": 22225,
+  "tokens": [
+    {
+      "symbol": "WCLES",
+      "name": "Wrapped Celes",
+      "address": "0xcfc4Fa68042509a239fA33f7A559860C875dCA70",
+      "decimals": 18
+    },
+    {
+      "symbol": "WBTC",
+      "name": "Wrapped BTC",
+      "address": "0x97f4Fb442b5FDeD4Ce1f80f4777e904446db56F0",
+      "decimals": 18
+    },
+    {
+      "symbol": "C.USDC",
+      "name": "Celes USDC",
+      "address": "0x1BAb49aA82197ee8B5131A09CfE2fE0BF1603103",
+      "decimals": 6
+    },
+    {
+      "symbol": "EX",
+      "name": "Exchange Token",
+      "address": "0xB567431a2719a25E40F49B5a9E478E54C0944Afc",
+      "decimals": 18
+    }
+  ]
+}
