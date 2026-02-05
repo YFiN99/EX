@@ -1,8 +1,8 @@
-import React, { useState } from 'react'; // 1. Impor React dan Hooks
+import React, { useState } from 'react';
 import { ConnectKitButton } from "connectkit";
-import { useAccount } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 
-// 2. Impor Komponen (Pastikan file-file ini ada di folder /components)
+// 2. Impor Komponen (Pastikan file ini ada di folder /components)
 import { Swap } from "./components/Swap";
 import { Stake } from "./components/Stake";
 import { AddLiquidity } from "./components/AddLiquidity";
@@ -12,10 +12,12 @@ function App() {
   const [tab, setTab] = useState('swap');
   const [poolMode, setPoolMode] = useState('add');
   
-  // Ambil alamat dompet secara otomatis dari Wagmi 🕵️
-  const { address: account, isConnected } = useAccount();
-
-  const ROUTER_ADDR = import.meta.env.VITE_ROUTER_ADDRESS || "0xc48891E4E525D4c32b0B06c5fe77Efe7743939FD";
+  // Ambil data dari Wagmi & Env
+  const { isConnected } = useAccount();
+  const chainId = useChainId();
+  
+  // Mengambil alamat router secara dinamis dari .env
+  const ROUTER_ADDR = import.meta.env.VITE_ROUTER_ADDRESS;
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-cyan-500/30">
@@ -26,7 +28,7 @@ function App() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8 bg-white/5 p-4 rounded-[2.5rem] border border-white/10 backdrop-blur-xl">
           <div className="pl-2">
-            <h1 className="text-xl font-black tracking-tighter text-white italic">EX</h1>
+            <h1 className="text-xl font-black tracking-tighter text-white italic">CELES</h1>
             <p className="text-[10px] font-bold text-cyan-500 tracking-[0.3em] uppercase opacity-80">Testnet V2</p>
           </div>
           <ConnectKitButton />
@@ -51,8 +53,8 @@ function App() {
         <div className="min-h-[340px] bg-white/5 p-6 rounded-[3rem] border border-white/10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
           {!isConnected ? (
             <div className="flex flex-col items-center justify-center h-[300px] space-y-4">
-              <span className="text-4xl animate-bounce">🌊</span>
-              <p className="text-cyan-100/60 text-sm font-medium">Connect wallet to dive in</p>
+              <span className="text-4xl animate-bounce">🛰️</span>
+              <p className="text-cyan-100/60 text-sm font-medium text-center">Connect wallet to explore<br/>CelesChain Ecosystem</p>
             </div>
           ) : (
             <div className="animate-in fade-in zoom-in duration-500">
@@ -61,7 +63,7 @@ function App() {
                {tab === 'pool' && (
                  <div className="space-y-4">
                    <div className="flex gap-2 p-1 bg-black/20 rounded-2xl border border-white/5">
-                     <button onClick={() => setPoolMode('add')} className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase ${poolMode === 'add' ? 'bg-white/10 text-white' : 'text-slate-500'}`}>Add</button>
+                     <button onClick={() => setPoolMode('add')} className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase ${poolMode === 'add' ? 'bg-white/10 text-white' : 'text-slate-500'}`}>Add Liquidity</button>
                      <button onClick={() => setPoolMode('remove')} className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase ${poolMode === 'remove' ? 'bg-white/10 text-white' : 'text-slate-500'}`}>Remove</button>
                    </div>
                    {poolMode === 'add' ? <AddLiquidity routerAddr={ROUTER_ADDR} /> : <RemoveLiquidity />}
@@ -77,13 +79,13 @@ function App() {
         <div className="mt-8 px-6 flex justify-between items-center text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
            <div className="flex items-center gap-2">
              <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-slate-700'}`} />
-             <span>{isConnected ? "System Online" : "Waiting for Connection"}</span>
+             <span>{isConnected ? "Network Connected" : "Waiting for Connection"}</span>
            </div>
-           <span>Net ID: 22225</span>
+           <span>Net ID: {chainId || '22225'}</span>
         </div>
       </div>
     </div>
   );
 }
 
-export default App; // 3. Ekspor default agar main.jsx bisa membacanya 👈
+export default App;
